@@ -1,0 +1,195 @@
+Logar usuário
+
+http://localhost:3000/api/usuario/login
+
+{
+  "matricula": "20250176310-03",
+  "senha": "2000-05-27"
+}
+
+
+Vá na aba Headers e adicione:
+
+Key: Authorization
+
+Value: Bearer tokenaqui
+
+
+Criar aluno:
+
+POST http://localhost:3000/api/admin/alunos
+
+{
+  "nome": "João",
+  "sobrenome": "Silva",
+  "data_nascimento": "2000-05-18",
+  "email": "joao@email.com",
+  "telefone": "11999999999",
+  "cpf": "12345678900"
+}
+
+__________________________________________________________________________________
+
+Ler aluno por matrícula:
+
+GET http://localhost:3000/api/admin/alunos/20250134847-01
+
+__________________________________________________________________________________
+
+Listar todos os alunos
+
+GET http://localhost:3000/api/admin/alunos
+
+__________________________________________________________________________________
+
+Atualizar aluno
+
+PUT http://localhost:3000/api/admin/alunos/20250134847-01
+
+{
+  "periodo": "202502",
+  "pessoa": {
+    "nome": "IRINEU"
+  }
+}
+
+__________________________________________________________________________________
+
+Apagar aluno
+
+DELETE http://localhost:3000/api/admin/alunos/20250134847-01
+
+__________________________________________________________________________________
+
+Criar professor
+
+POST http://localhost:3000/api/admin/professores
+
+{
+  "nome": "Carlos",
+  "sobrenome": "Silva",
+  "data_nascimento": "1980-05-15",
+  "email": "carlos@email.com",
+  "telefone": "11999999999",
+  "cpf": "12345678901"
+}
+
+__________________________________________________________________________________
+
+Ler professor por matricula
+
+GET http://localhost:3000/api/admin/professores/20250173435-02
+
+__________________________________________________________________________________
+
+Listar todos os professores
+
+GET http://localhost:3000/api/admin/professores
+
+__________________________________________________________________________________
+
+Atualizar professor
+
+http://localhost:3000/api/admin/professores/20250173435-02
+
+{
+  "periodo": "202502",
+  "pessoa": {
+    "nome": "IRINEU"
+  }
+}
+
+__________________________________________________________________________________
+
+Apagar professor
+
+http://localhost:3000/api/admin/professores/20250173435-02
+
+__________________________________________________________________________________
+
+Criar disciplina
+
+POST http://localhost:3000/api/admin/disciplinas
+
+{
+  "id": "DIS001",
+  "nome": "Matemática Aplicada",
+  "carga_horaria": 60,
+  "professor": {
+    "matricula": "PROF001"
+  }
+}
+
+__________________________________________________________________________________
+
+Ler disciplina por ID
+
+GET http://localhost:3000/api/admin/disciplinas/DIS001
+
+__________________________________________________________________________________
+
+Ler todas as disciplinas
+
+GET http://localhost:3000/api/admin/disciplinas
+
+__________________________________________________________________________________
+
+Atualizar disciplina por ID
+
+PUT http://localhost:3000/api/admin/disciplinas/DIS001
+
+{
+  "nome": "Matemática Avançada",
+  "carga_horaria": 80,
+  "professor": {
+    "matricula": "PROF002"
+  }
+}
+
+__________________________________________________________________________________
+
+Apagar disciplina por ID
+
+DELETE http://localhost:3000/api/admin/disciplinas/DIS001
+
+__________________________________________________________________________________
+
+Vincular professor à disciplina
+
+POST http://localhost:3000/api/admin/disciplinas/vincular-professor
+
+{
+  "disciplinaId": "DIS001",
+  "professorMatricula": "20250136812-02"
+}
+
+__________________________________________________________________________________
+
+Desvincular professor da disciplina
+
+DELETE http://localhost:3000/api/admin/disciplinas/DIS001/desvincular-professor
+
+__________________________________________________________________________________
+
+Vincular aluno à disciplina
+
+POST http://localhost:3000/api/admin/disciplinas/vincular-aluno
+
+{
+  "alunoMatricula": "20250115358-01",
+  "disciplinaId": "DIS001",
+  "turno": "Matutino",
+  "data_inicio_semestre": "2025-02-10",
+  "data_termino_semestre": "2025-06-30"
+}
+
+__________________________________________________________________________________
+
+Atualizar nota do aluno na disciplina
+
+PUT http://localhost:3000/api/admin/disciplinas/DIS001/atualizar-nota/20250115358-01
+
+{
+  "nota_1": 8.5,
+  "nota_2": 9.0
+}

@@ -1,0 +1,13 @@
+.form-card {
+    background-color: #f0f0f0;
+    padding: 2rem;
+    border-radius: 0.625em;
+    box-shadow: 0 0.25em 0.625em rgba(0,0,0,0.1);
+    width: 18.75em;
+    text-align: center;
+}
+  
+.form-card h2 {
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}

@@ -1,0 +1,13 @@
+.text-input {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    text-align: left;
+}
+  
+.text-input input {
+    padding: 0.5em;
+    border-radius: 0.938em;
+    border: 0.063em solid #aaa;
+    margin-top: 0.25em;
+}
