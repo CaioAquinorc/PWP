@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import './genericButton.css';
 import props from '../../types/props'  

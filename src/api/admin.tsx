@@ -27,7 +27,7 @@ carga_horaria?: string,
 professor?: professorData
 }
 
-export const criarUsuario = ( 
+export const criarUsuario: any = ( 
     nome: string, 
     sobrenome: string, 
     dataNascimento: string, 
@@ -47,7 +47,7 @@ export const criarUsuario = (
 
     api.post('/api/admin/alunos', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -55,29 +55,29 @@ export const criarUsuario = (
     .catch((err) => console.error(err));
 }
 
-export const getAluno = (matricula: string) => {
+export const getAluno: any = (matricula: string) => {
 
     api.get('/api/admin/alunos/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
     .catch((err) => console.error(err));
 }
 
-export const getAlunoList = () => {
+export const getAlunoList: any = () => {
 
     api.get('/api/admin/alunos', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
     .catch((err) => console.error(err));
 }
 
-export const atualizarAluno = ( matricula: string, aluno: Partial<alunoData>) => {
+export const atualizarAluno: any = ( matricula: string, aluno: Partial<alunoData>) => {
 
     const data: alunoData = {};
 
@@ -93,7 +93,7 @@ export const atualizarAluno = ( matricula: string, aluno: Partial<alunoData>) =>
 
     api.put('http://localhost:3000/api/admin/alunos/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -101,18 +101,18 @@ export const atualizarAluno = ( matricula: string, aluno: Partial<alunoData>) =>
     .catch((err) => console.error(err));
 }
 
-export const apagarAluno = ( matricula: string ) => {
+export const apagarAluno: any = ( matricula: string ) => {
 
     api.delete('/api/admin/alunos/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
     .catch((err) => console.error(err));
 }
 
-export const criarProfessor = ( 
+export const criarProfessor: any = ( 
     nome: string, 
     sobrenome: string, 
     dataNascimento: string, 
@@ -132,7 +132,7 @@ export const criarProfessor = (
 
     api.post('/api/admin/professores', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -140,11 +140,11 @@ export const criarProfessor = (
     .catch((err) => console.error(err));
 }
 
-export const getProfessor = ( matricula: string ) => {
+export const getProfessor: any = ( matricula: string ) => {
 
     api.get('/api/admin/professores/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
@@ -152,11 +152,11 @@ export const getProfessor = ( matricula: string ) => {
 
 }
 
-export const getProfessorList = () => {
+export const getProfessorList: any = () => {
 
     api.get('/api/admin/professores', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
@@ -164,7 +164,7 @@ export const getProfessorList = () => {
 
 }
 
-export const atualizarProfessor = ( matricula: string, professor: Partial<professorData>) => {
+export const atualizarProfessor: any = ( matricula: string, professor: Partial<professorData>) => {
 
     const data: professorData = {};
 
@@ -180,7 +180,7 @@ export const atualizarProfessor = ( matricula: string, professor: Partial<profes
 
     api.put('http://localhost:3000/api/admin/professores/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -188,18 +188,18 @@ export const atualizarProfessor = ( matricula: string, professor: Partial<profes
     .catch((err) => console.error(err));
 }
 
-export const apagarProfessor = ( matricula: string ) => {
+export const apagarProfessor: any = ( matricula: string ) => {
 
     api.delete('/api/admin/professores/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
     .catch((err) => console.error(err));
 }
 
-export const criarDisciplina = ( 
+export const criarDisciplina: any = ( 
     id: string,
     nome: string,
     carga_horaria: string,
@@ -215,7 +215,7 @@ export const criarDisciplina = (
 
     api.post('/api/admin/disciplinas', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -223,11 +223,11 @@ export const criarDisciplina = (
     .catch((err) => console.error(err));
 }
 
-export const getDiciplina = ( id: string ) => {
+export const getDiciplina: any = ( id: string ) => {
 
     api.get('/api/admin/disciplinas/'+id, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
@@ -235,11 +235,11 @@ export const getDiciplina = ( id: string ) => {
 
 }
 
-export const getDiciplinaList = () => {
+export const getDiciplinaList: any = () => {
 
     api.get('/api/admin/disciplinas', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
@@ -247,7 +247,7 @@ export const getDiciplinaList = () => {
 
 }
 
-export const atualizarDiciplina = ( id: string, diciplina: Partial<diciplinaData>) => {
+export const atualizarDiciplina: any = ( id: string, diciplina: Partial<diciplinaData>) => {
 
     const data: diciplinaData = {};
 
@@ -263,7 +263,7 @@ export const atualizarDiciplina = ( id: string, diciplina: Partial<diciplinaData
 
     api.put('/api/admin/disciplinas/'+id, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -271,18 +271,18 @@ export const atualizarDiciplina = ( id: string, diciplina: Partial<diciplinaData
     .catch((err) => console.error(err));
 }
 
-export const apagarDiciplina = ( id: string ) => {
+export const apagarDiciplina: any = ( id: string ) => {
 
     api.delete('/api/admin/disciplinas/'+id, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
     .catch((err) => console.error(err));
 }
 
-export const vincularProfessorDiciplina = ( id: string, matricula: string ) => {
+export const vincularProfessorDiciplina: any = ( id: string, matricula: string ) => {
 
     const data = {
         disciplinaId: id,
@@ -291,7 +291,7 @@ export const vincularProfessorDiciplina = ( id: string, matricula: string ) => {
 
     api.post('/api/admin/disciplinas/vincular-professor', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -299,18 +299,18 @@ export const vincularProfessorDiciplina = ( id: string, matricula: string ) => {
     .catch((err) => console.error(err));
 }
 
-export const desvincularProfessorDiciplina = ( id: string,) => {
+export const desvincularProfessorDiciplina: any = ( id: string,) => {
 
     api.delete('/api/admin/disciplinas/'+id+'/desvincular-professor', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
     })
     .then((res) => {return res.data})
     .catch((err) => console.error(err));
 }
 
-export const vincularAlunoDiciplina = ( 
+export const vincularAlunoDiciplina: any = ( 
     id: string,
     matricula: string,
     turno: string,
@@ -328,7 +328,7 @@ export const vincularAlunoDiciplina = (
 
     api.post('/api/admin/disciplinas/vincular-aluno', {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })
@@ -336,7 +336,7 @@ export const vincularAlunoDiciplina = (
     .catch((err) => console.error(err));
 }
 
-export const atualizarNotaAluno = ( id: string, matricula: string, nota_1: number, nota_2: number) => {
+export const atualizarNotaAluno: any = ( id: string, matricula: string, nota_1: number, nota_2: number) => {
 
     const data = {
         nota_1: nota_1,
@@ -345,7 +345,7 @@ export const atualizarNotaAluno = ( id: string, matricula: string, nota_1: numbe
 
     api.put('/api/admin/disciplinas/'+id+'/atualizar-nota/'+matricula, {
         headers: {
-            Authorization:'Bearer '+localStorage.getItem('user')
+            Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
     })

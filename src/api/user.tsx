@@ -1,6 +1,6 @@
 import api from "./api";
 
-export const loginUsuario = ( matricula: string, senha: string ) => {
+export const loginUsuario: any = ( matricula: string, senha: string ) => {
 
     const data = {
         matricula: matricula,
