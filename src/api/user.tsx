@@ -1,13 +1,12 @@
-import api from "./api";
+import axios, { AxiosError } from 'axios';
+import api from './api';
 
-export const loginUsuario: any = ( matricula: string, senha: string ) => {
+export const fazerLogin = async (matricula: string, senha: string) => {
 
-    const data = {
-        matricula: matricula,
-        senha: senha
-    };
+  const credentials = {
+    matricula,
+    senha
+  };
 
-    api.post('/api/usuario/login', data)
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+  return await api.post('/api/usuario/login', credentials );
 }

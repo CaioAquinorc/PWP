@@ -7,16 +7,15 @@ export default function Home(){
   const router = useRouter();
 
   useEffect((): any => {
-    const logado = localStorage.getItem("user")
+    const logado = localStorage.getItem('token');
 
     if(logado){
-
+      localStorage.clear();
       return (
         <div>
           <h1>Home</h1> 
         </div>
   )
-
     } else {
       router.push('/loginPage')
     }

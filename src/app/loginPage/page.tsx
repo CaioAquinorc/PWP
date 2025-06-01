@@ -6,11 +6,15 @@ import ForgotPasswordLink from '../../components/forgotPasswordLink';
 import '../../styles/loginPage.css';
 import FormCard from '../../components/formCard';
 import { useRouter } from 'next/navigation';
-import { loginUsuario } from '@/api/user';
+import { fazerLogin } from '@/api/user';
+import { error } from 'console';
+import { AxiosError } from 'axios';
 
 export default function LoginPage() {
   const [matricula, setMatricula] = useState('');
   const [senha, setSenha] = useState('');
+  const [message, setMessage] = useState('');
+  
   const router = useRouter();
 
   useEffect(() => {
@@ -20,24 +24,32 @@ export default function LoginPage() {
     }
   }, [router])
 
-  const handleLogin = async (event: React.FormEvent) => {
-    event .preventDefault();
+  const handleLogin = () => {
+  
+    fazerLogin(matricula, senha)
+    .then((response: any) => {
 
-    try{
-      const response = await loginUsuario(matricula, senha);
-
-      console.log('Login realizado com sucesso', response);
-
-      if(response && response.token){
-        localStorage.setItem('token', response.token)
+      if(response.data && response.data.token){
+        localStorage.setItem('token', response.data.token);
         router.push('/');
-      } else {
-        console.log('Erro: Token não recebido na resposta do login.');
       }
-    } catch(error) {
-      console.error('Erro ao fazer login:', error);
-    }
-  }
+
+    })
+    .catch((error: AxiosError) => {
+      if (error.response) {
+        // Erro vindo do servidor
+        console.error('Erro do servidor:', error.response.status, error.response.data);
+      } else if (error.request) {
+        // A requisição foi feita mas não houve resposta
+        console.error('Sem resposta do servidor:', error.request);
+      } else {
+        // Erro ao configurar a requisição
+        console.error('Erro na requisição:', error.message);
+        setMessage(error.message);
+      }
+    });
+
+  };
 
   return (
     <div className="login-page">
@@ -47,6 +59,7 @@ export default function LoginPage() {
         <TextInput label="Senha" type="password" onChange={(e:any) => setSenha(e.target.value)} />
         <ForgotPasswordLink />
         <GenericButton name="Entrar" onClick={handleLogin}/>
+        { message && <>{message}</>}
       </FormCard>
     </div>
   );

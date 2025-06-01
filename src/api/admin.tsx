@@ -1,33 +1,7 @@
 import api from "./api";
+import { alunoData, professorData, diciplinaData } from "@/types/datatype";
 
-export type pessoaData = {
-    nome?: string, 
-    sobrenome?: string, 
-    dataNascimento?: string, 
-    email?: string,
-    telefone?:string,
-    cpf?:string
-}
-
-export type alunoData = {
-    matricula?: string,
-    periodo?: string,
-    pessoa?: pessoaData
-}
-
-export type professorData = {
-    matricula?: string,
-    pessoa?: pessoaData
-}
-
-export type diciplinaData = {
-id?: string,
-nome?: string,
-carga_horaria?: string,
-professor?: professorData
-}
-
-export const criarUsuario: any = ( 
+export const criarUsuario: any = async ( 
     nome: string, 
     sobrenome: string, 
     dataNascimento: string, 
@@ -45,39 +19,33 @@ export const criarUsuario: any = (
         cpf: cpf
     };
 
-    api.post('/api/admin/alunos', {
+    return await api.post('/api/admin/alunos', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const getAluno: any = (matricula: string) => {
+export const getAluno: any = async (matricula: string) => {
 
-    api.get('/api/admin/alunos/'+matricula, {
+    return await api.get('/api/admin/alunos/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const getAlunoList: any = () => {
+export const getAlunoList: any = async () => {
 
-    api.get('/api/admin/alunos', {
+    return await api.get('/api/admin/alunos', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const atualizarAluno: any = ( matricula: string, aluno: Partial<alunoData>) => {
+export const atualizarAluno: any = async ( matricula: string, aluno: Partial<alunoData>) => {
 
     const data: alunoData = {};
 
@@ -91,28 +59,24 @@ export const atualizarAluno: any = ( matricula: string, aluno: Partial<alunoData
     data.pessoa = aluno.pessoa;
     }
 
-    api.put('http://localhost:3000/api/admin/alunos/'+matricula, {
+    return await api.put('/api/admin/alunos/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const apagarAluno: any = ( matricula: string ) => {
+export const apagarAluno: any = async ( matricula: string ) => {
 
-    api.delete('/api/admin/alunos/'+matricula, {
+    return await api.delete('/api/admin/alunos/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const criarProfessor: any = ( 
+export const criarProfessor: any =  async ( 
     nome: string, 
     sobrenome: string, 
     dataNascimento: string, 
@@ -130,41 +94,35 @@ export const criarProfessor: any = (
         cpf: cpf
     };
 
-    api.post('/api/admin/professores', {
+    return await api.post('/api/admin/professores', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const getProfessor: any = ( matricula: string ) => {
+export const getProfessor: any = async ( matricula: string ) => {
 
-    api.get('/api/admin/professores/'+matricula, {
+    return await api.get('/api/admin/professores/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 
 }
 
-export const getProfessorList: any = () => {
+export const getProfessorList: any = async () => {
 
-    api.get('/api/admin/professores', {
+    return await api.get('/api/admin/professores', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 
 }
 
-export const atualizarProfessor: any = ( matricula: string, professor: Partial<professorData>) => {
+export const atualizarProfessor: any = async ( matricula: string, professor: Partial<professorData>) => {
 
     const data: professorData = {};
 
@@ -178,28 +136,24 @@ export const atualizarProfessor: any = ( matricula: string, professor: Partial<p
     data.pessoa = professor.pessoa;
     }
 
-    api.put('http://localhost:3000/api/admin/professores/'+matricula, {
+    return await api.put('/api/admin/professores/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const apagarProfessor: any = ( matricula: string ) => {
+export const apagarProfessor: any = async ( matricula: string ) => {
 
-    api.delete('/api/admin/professores/'+matricula, {
+    return await api.delete('/api/admin/professores/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const criarDisciplina: any = ( 
+export const criarDisciplina: any = async ( 
     id: string,
     nome: string,
     carga_horaria: string,
@@ -213,41 +167,35 @@ export const criarDisciplina: any = (
         professor
     }
 
-    api.post('/api/admin/disciplinas', {
+    return await api.post('/api/admin/disciplinas', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const getDiciplina: any = ( id: string ) => {
+export const getDiciplina: any = async ( id: string ) => {
 
-    api.get('/api/admin/disciplinas/'+id, {
+    return await api.get('/api/admin/disciplinas/'+id, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 
 }
 
-export const getDiciplinaList: any = () => {
+export const getDiciplinaList: any = async () => {
 
-    api.get('/api/admin/disciplinas', {
+    return await api.get('/api/admin/disciplinas', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 
 }
 
-export const atualizarDiciplina: any = ( id: string, diciplina: Partial<diciplinaData>) => {
+export const atualizarDiciplina: any = async ( id: string, diciplina: Partial<diciplinaData>) => {
 
     const data: diciplinaData = {};
 
@@ -261,56 +209,48 @@ export const atualizarDiciplina: any = ( id: string, diciplina: Partial<diciplin
     data.professor = diciplina.professor;
     }
 
-    api.put('/api/admin/disciplinas/'+id, {
+    return await api.put('/api/admin/disciplinas/'+id, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const apagarDiciplina: any = ( id: string ) => {
+export const apagarDiciplina: any = async ( id: string ) => {
 
-    api.delete('/api/admin/disciplinas/'+id, {
+    return await api.delete('/api/admin/disciplinas/'+id, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const vincularProfessorDiciplina: any = ( id: string, matricula: string ) => {
+export const vincularProfessorDiciplina: any = async ( id: string, matricula: string ) => {
 
     const data = {
         disciplinaId: id,
-        professorMatricula: "20250136812-02"
+        professorMatricula: matricula
     }
 
-    api.post('/api/admin/disciplinas/vincular-professor', {
+    return await api.post('/api/admin/disciplinas/vincular-professor', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const desvincularProfessorDiciplina: any = ( id: string,) => {
+export const desvincularProfessorDiciplina: any = async ( id: string,) => {
 
-    api.delete('/api/admin/disciplinas/'+id+'/desvincular-professor', {
+    return await api.delete('/api/admin/disciplinas/'+id+'/desvincular-professor', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const vincularAlunoDiciplina: any = ( 
+export const vincularAlunoDiciplina: any = async ( 
     id: string,
     matricula: string,
     turno: string,
@@ -326,29 +266,25 @@ export const vincularAlunoDiciplina: any = (
         data_termino_semestre: data_termino_semestre
     }
 
-    api.post('/api/admin/disciplinas/vincular-aluno', {
+    return await api.post('/api/admin/disciplinas/vincular-aluno', {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
 
-export const atualizarNotaAluno: any = ( id: string, matricula: string, nota_1: number, nota_2: number) => {
+export const atualizarNotaAluno: any = async ( id: string, matricula: string, nota_1: number, nota_2: number) => {
 
     const data = {
         nota_1: nota_1,
         nota_2: nota_2
     };
 
-    api.put('/api/admin/disciplinas/'+id+'/atualizar-nota/'+matricula, {
+    return await api.put('/api/admin/disciplinas/'+id+'/atualizar-nota/'+matricula, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
         },
         data
-    })
-    .then((res) => {return res.data})
-    .catch((err) => console.error(err));
+    });
 }
