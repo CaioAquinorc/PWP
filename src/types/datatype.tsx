@@ -19,8 +19,8 @@ export type professorData = {
 }
 
 export type diciplinaData = {
-id?: string,
-nome?: string,
-carga_horaria?: string,
-professor?: professorData
+    id?: string,
+    nome?: string,
+    carga_horaria?: string,
+    professor?: professorData
 }
