@@ -1,0 +1,93 @@
+.card {
+    background-color: #ffffff;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    padding: 1.5rem; /* p-6 */
+    width: 70%; /* Garante que o card ocupe a largura total disponível */
+    height: fit-content; /* Para que os cards não se estiquem demais */
+}
+
+/* Estilos do conteúdo principal */
+
+
+/* Estilos das seções */
+.section-title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600; /* font-semibold */
+    color: #2d3748; /* gray-800 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+/* Estilos dos botões */
+.btn-primary {
+    background-color: #2563eb; /* blue-700 */
+    color: #ffffff;
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 600; /* font-semibold */
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #1b52e7; /* blue-800 */
+}
+
+.btn-secondary {
+    background-color: #2563eb; /* gray-200 */
+    color: #ffffff; /* gray-700 */
+    padding: 0.5rem 1rem; /* py-2 px-4 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 500; /* font-medium */
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+.btn-secondary:hover {
+    background-color: #1d4ed8; /* gray-300 */
+}
+.btn-save-grade {
+    padding: 0.3rem 0.6rem; /* Menor para caber na tabela */
+    font-size: 0.75rem; /* Menor fonte */
+    border-radius: 0.375rem; /* rounded-md */
+}
+
+/* Estilos específicos para DisciplineList */
+.discipline-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* space-y-4 */
+}
+.discipline-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem; /* p-4 */
+    background-color: #f9fafb; /* gray-50 */
+    border-radius: 0.5rem; /* rounded-lg */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+}
+
+
+@media (min-width: 640px) { /* sm breakpoint */
+    .discipline-card {
+        flex-direction: row;
+        align-items: center;
+    }
+    .discipline-card .btn-secondary {
+        margin-top: 0; /* sm:mt-0 */
+    }
+}
+.discipline-card-title {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 500; /* font-medium */
+    color: #2d3748; /* gray-800 */
+}
+.discipline-card-info {
+    font-size: 0.875rem; /* text-sm */
+    color: #4a5568; /* gray-600 */
+}
+.discipline-card .btn-secondary {
+    margin-top: 0.75rem; /* mt-3 */
+}

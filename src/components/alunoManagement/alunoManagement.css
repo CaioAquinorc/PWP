@@ -1,0 +1,103 @@
+
+
+.card {
+    background-color: #ffffff;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    padding: 1.5rem; /* p-6 */
+    height: fit-content; /* Para que os cards não se estiquem demais */
+}
+
+/* Estilos comuns para títulos de seção e formulários */
+.section-title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600; /* font-semibold */
+    color: #2d3748; /* gray-800 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}
+
+.form-container {
+    margin-bottom: 2rem; /* mb-8 */
+}
+
+.form-subtitle {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 500; /* font-medium */
+    color: #4a5568; /* gray-700 */
+    margin-bottom: 1rem; /* mb-4 */
+}
+
+.form-space-y-4 > *:not(:last-child) {
+    margin-bottom: 1rem; /* space-y-4 */
+}
+
+.label-text {
+    display: block;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #4a5568; /* gray-700 */
+    margin-bottom: 0.25rem; /* mb-1 */
+}
+
+.input-field {
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    width: 100%;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: #3b82f6; /* blue-500 */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* ring-4 ring-blue-300 */
+}
+
+.btn-primary {
+    background-color: #2563eb; /* blue-700 */
+    color: #ffffff;
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 600; /* font-semibold */
+    transition: background-color 0.2s ease-in-out;
+    width: 100%; /* w-full */
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8; /* blue-800 */
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.data-table {
+    min-width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    background-color: #ffffff;
+    border-radius: 0.75rem; /* rounded-xl */
+    overflow: hidden; /* Para cantos arredondados na tabela */
+}
+
+.table-header th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #4b5563; /* gray-700 */
+    background-color: #f9fafb; /* gray-50 */
+}
+
+.rounded-tl-lg-th {
+    border-top-left-radius: 0.75rem;
+}
+
+.rounded-tr-lg-th {
+    border-top-right-radius: 0.75rem;
+}
+
+.table-body td {
+    padding: 0.75rem 1rem;
+    border-top: 1px solid #e5e7eb; /* gray-200 */
+}
