@@ -1,0 +1,116 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.app-container {
+    width: 100%;
+    /*max-width: 72rem;*/
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-content {
+    width: 100%;
+    max-width: 72rem;
+    display: flex;
+    justify-content: center;
+    grid-template-columns: 1fr;
+    gap: 6rem;
+}
+
+@media (min-width: 1024px) { /* lg breakpoint */
+    .main-content {
+        grid-template-columns: repeat(3, 1fr); /* lg:grid-cols-3 */
+    }
+    .section-col {
+        grid-column: span 1 / span 1; /* lg:col-span-1 */
+    }
+}
+.btn-primary {
+    background-color: #2563eb; /* blue-700 */
+    color: #ffffff;
+    padding: 0.75rem 1.5rem; /* py-3 px-6 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 600; /* font-semibold */
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8; /* blue-800 */
+}
+
+.btn-secondary {
+    background-color: #2563eb; /* blue-700 */
+    color: #ffffff;
+    padding: 0.5rem 1rem; /* py-2 px-4 */
+    border-radius: 0.5rem; /* rounded-lg */
+    font-weight: 500; /* font-medium */
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+.btn-secondary:hover {
+    background-color: #d1d5db; /* gray-300 */
+}
+
+.btn-logout {
+    background-color: #fc6767; 
+    color: #ffffff; 
+    padding: 0.5rem 1rem; 
+    border-radius: 0.5rem; 
+    font-weight: 500; 
+    transition: background-color 0.2s ease-in-out;
+    cursor: pointer;
+    border: none;
+}
+.btn-logout:hover {
+    background-color: #d1d5db; /* gray-300 */
+}
+
+/* Estilos de input genéricos */
+.input-field {
+    border: 1px solid #d1d5db; /* gray-300 */
+    border-radius: 0.5rem; /* rounded-lg */
+    padding: 0.75rem 1rem; /* py-3 px-4 */
+    width: 100%;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+.input-field:focus {
+    outline: none;
+    border-color: #3b82f6; /* blue-500 */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* ring-4 ring-blue-300 */
+}
+.label-text {
+    display: block;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500; /* font-medium */
+    color: #4a5568; /* gray-700 */
+    margin-bottom: 0.25rem; /* mb-1 */
+}
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 0.75rem; /* rounded-xl */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* shadow-md */
+    padding: 1.5rem; /* p-6 */
+    width: 100%; /* Garante que o card ocupe a largura total disponível */
+}
+
+.section-title {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600; /* font-semibold */
+    color: #2d3748; /* gray-800 */
+    margin-bottom: 1.5rem; /* mb-6 */
+}

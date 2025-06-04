@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { criarUsuario } from "@/api/admin";
 import "./alunoManagement.css";
+import { error } from "console";
 
 export default function AlunoManagement() {
   const [cpf, setCpf] = useState('');
@@ -23,7 +24,25 @@ export default function AlunoManagement() {
       return;
     }
 
-    try {
+    criarUsuario(nome, sobrenome, dataNascimento, email, telefone, cpf)
+    .then((response: any) => {
+      setMensagem('Aluno matriculado com sucesso!');
+      setTipoMensagem('sucesso');
+
+      setCpf('');
+      setEmail('');
+      setNome('');
+      setSobrenome('');
+      setDataNascimento('');
+      setTelefone('');
+    })
+    .catch((error: any) => {
+      console.error("Erro ao criar aluno:", error);
+      setMensagem('Erro ao matricular aluno. Verifique os dados ou tente novamente.');
+      setTipoMensagem('erro');
+    });
+
+    /*try {
       await criarUsuario(nome, sobrenome, dataNascimento, email, telefone, cpf);
       setMensagem('Aluno matriculado com sucesso!');
       setTipoMensagem('sucesso');
@@ -40,6 +59,7 @@ export default function AlunoManagement() {
       setMensagem('Erro ao matricular aluno. Verifique os dados ou tente novamente.');
       setTipoMensagem('erro');
     }
+    */
   };
 
   return (

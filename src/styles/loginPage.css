@@ -4,7 +4,7 @@
     align-items: center;
     height: 100vh;
     padding: 1em;
-    
+    width: 100%;
     background: linear-gradient(to right, #6a82fb, #b3c1f7);
     font-family: Arial, sans-serif;
 }

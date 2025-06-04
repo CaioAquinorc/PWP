@@ -1,32 +1,44 @@
 "use client"
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import Header from '@/components/header';
+import { jwtDecode } from "jwt-decode";
 
-export default function Home(){
+interface MyTokenPayload {
+  sub: string;
+  role: string;
+  exp: number;
+  iat: number;
+}
 
+export default function Home() {
   const router = useRouter();
 
   const handleLogout = () => {
-    // 1. Remover o token de autenticação 
-    localStorage.removeItem('token'); // Remove o token do Local Storage
-
-    // 2. Redirecionar o usuário para a página de login
+    localStorage.removeItem('token');
     router.push('/loginPage');
   };
 
-  useEffect((): any => {
+  useEffect(() => {
     const logado = localStorage.getItem('token');
+    if (logado) {
+      const decode = jwtDecode<MyTokenPayload>(logado);
 
-    if(logado){
-      return (
-        <div>
-          <Header titulo={'Controle Acadêmico'} subtitulo={'Pagina inicial.'} OnLogOut={handleLogout}/>
-          <h1>Home</h1> 
-        </div>
-  )
+      if (decode.role.endsWith('03')) {
+        console.log("Admin");
+        router.push('/AdminPage');
+      }
+      // Você pode adicionar lógica para outros papéis (01, 02) aqui, se necessário
+
     } else {
-      router.push('/loginPage')
+      router.push('/loginPage');
     }
-  })
+  }, [router]);
+
+  return (
+    <div>
+      <Header titulo={'Controle Acadêmico'} subtitulo={'Página inicial.'} OnLogOut={handleLogout} />
+      <h1></h1>
+    </div>
+  );
 }

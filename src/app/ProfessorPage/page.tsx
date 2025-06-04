@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import '../../styles/professorPage.css';
 import VincularAluno from "@/components/vincularAluno";
 import { useRouter } from 'next/navigation';
+import ModalEditarPerfil from "@/components/editarPerfil";
 
 
 
@@ -20,7 +21,13 @@ export default function ProfessorPage() {
         router.push('/loginPage');
     };
 
-    const [nomeProfessor] = useState('João da Silva'); // GET PROFESSOR NOME
+    const [dadosProfessor, setDadosProfessor] = useState({ // GET dados do Professor
+    nome: 'João',
+    sobrenome: 'Souza',
+    data_nascimento: '2000-03-22',
+    email: 'souza.joao@gmail.com',
+    telefone: '11999999999',
+    });
     
     const [disciplinas, setDisciplinas] = useState([ //GET DISCIPLINAS
         { nome: 'Programação Web I', id: 'PW101', totalAlunos: 0 },
@@ -104,9 +111,24 @@ export default function ProfessorPage() {
         ? alunosPorDisciplina[idDisciplinaSelecionada] || []
         : [];
 
+
+    const [mostrarModalEdicao, setMostrarModalEdicao] = useState(false);
+
+    const handleSalvarDados = (novosDados) => {
+        setDadosProfessor(prevDados => ({
+            ...prevDados,
+            nome: novosDados.nome,
+            sobrenome: novosDados.sobrenome,
+            data_nascimento: novosDados.data_nascmento,
+            email: novosDados.email, 
+            telefone: novosDados.telefone // Embora desabilitado no modal, a lógica de salvamento pode existir
+        }));
+        setMostrarModalEdicao(false); // Fecha o modal após salvar
+    };
+
     return (
         <div className="app-container">
-            <Header titulo={'Página do Professor'} subtitulo={`Bem-vindo(a), Professor(a) ${nomeProfessor}.`} OnLogOut={handleLogout}/>
+            <Header titulo={'Página do Professor'} subtitulo={`Bem-vindo(a), Professor(a) ${dadosProfessor.nome + ' ' + dadosProfessor.sobrenome}.`} OnLogOut={handleLogout} onEditarPerfil={() => setMostrarModalEdicao(true)}/>
             <div className="main-content">
                 {idDisciplinaSelecionada ? (
                     <GerenciamentoNotas
@@ -132,6 +154,19 @@ export default function ProfessorPage() {
                 alunosNaDisciplinaAtual={alunosParaDisciplinaSelecionada}
                 onVincularAluno={handleAdicionarAlunoNaDisciplina}
                 idDisciplinaSelecionada={idDisciplinaSelecionada}
+            />
+            <ModalEditarPerfil 
+                mostrar={mostrarModalEdicao} 
+                onFechar={() => setMostrarModalEdicao(false)} 
+                dadosIniciais={{
+                    nome: dadosProfessor.nome, 
+                    sobrenome: dadosProfessor.sobrenome, 
+                    data_nascimento: dadosProfessor.data_nascimento, 
+                    email: dadosProfessor.email,
+                    telefone: dadosProfessor.telefone
+    
+                }} 
+                onSalvar={handleSalvarDados} 
             />
         </div>
     )

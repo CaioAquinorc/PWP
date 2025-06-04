@@ -1,7 +1,7 @@
 import api from "./api";
 import { alunoData, professorData, diciplinaData } from "@/types/datatype";
 
-export const criarUsuario: any = async ( 
+export const criarUsuario = async ( 
     nome: string, 
     sobrenome: string, 
     dataNascimento: string, 
@@ -19,15 +19,14 @@ export const criarUsuario: any = async (
         cpf: cpf
     };
 
-    return await api.post('/api/admin/alunos', {
+    return await api.post('/api/admin/alunos',data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
-export const getAluno: any = async (matricula: string) => {
+export const getAluno = async (matricula: string) => {
 
     return await api.get('/api/admin/alunos/'+matricula, {
         headers: {
@@ -36,7 +35,7 @@ export const getAluno: any = async (matricula: string) => {
     });
 }
 
-export const getAlunoList: any = async () => {
+export const getAlunoList = async () => {
 
     return await api.get('/api/admin/alunos', {
         headers: {
@@ -45,7 +44,7 @@ export const getAlunoList: any = async () => {
     });
 }
 
-export const atualizarAluno: any = async ( matricula: string, aluno: Partial<alunoData>) => {
+export const atualizarAluno = async ( matricula: string, aluno: Partial<alunoData>) => {
 
     const data: alunoData = {};
 
@@ -67,7 +66,7 @@ export const atualizarAluno: any = async ( matricula: string, aluno: Partial<alu
     });
 }
 
-export const apagarAluno: any = async ( matricula: string ) => {
+export const apagarAluno = async ( matricula: string ) => {
 
     return await api.delete('/api/admin/alunos/'+matricula, {
         headers: {
@@ -76,7 +75,7 @@ export const apagarAluno: any = async ( matricula: string ) => {
     });
 }
 
-export const criarProfessor: any =  async ( 
+export const criarProfessor =  async ( 
     nome: string, 
     sobrenome: string, 
     dataNascimento: string, 
@@ -102,7 +101,7 @@ export const criarProfessor: any =  async (
     });
 }
 
-export const getProfessor: any = async ( matricula: string ) => {
+export const getProfessor = async ( matricula: string ) => {
 
     return await api.get('/api/admin/professores/'+matricula, {
         headers: {
@@ -112,7 +111,7 @@ export const getProfessor: any = async ( matricula: string ) => {
 
 }
 
-export const getProfessorList: any = async () => {
+export const getProfessorList = async () => {
 
     return await api.get('/api/admin/professores', {
         headers: {
@@ -122,7 +121,7 @@ export const getProfessorList: any = async () => {
 
 }
 
-export const atualizarProfessor: any = async ( matricula: string, professor: Partial<professorData>) => {
+export const atualizarProfessor = async ( matricula: string, professor: Partial<professorData>) => {
 
     const data: professorData = {};
 
@@ -144,7 +143,7 @@ export const atualizarProfessor: any = async ( matricula: string, professor: Par
     });
 }
 
-export const apagarProfessor: any = async ( matricula: string ) => {
+export const apagarProfessor = async ( matricula: string ) => {
 
     return await api.delete('/api/admin/professores/'+matricula, {
         headers: {
@@ -153,7 +152,7 @@ export const apagarProfessor: any = async ( matricula: string ) => {
     });
 }
 
-export const criarDisciplina: any = async ( 
+export const criarDisciplina = async ( 
     id: string,
     nome: string,
     carga_horaria: string,
@@ -175,7 +174,7 @@ export const criarDisciplina: any = async (
     });
 }
 
-export const getDiciplina: any = async ( id: string ) => {
+export const getDiciplina = async ( id: string ) => {
 
     return await api.get('/api/admin/disciplinas/'+id, {
         headers: {
@@ -185,7 +184,7 @@ export const getDiciplina: any = async ( id: string ) => {
 
 }
 
-export const getDiciplinaList: any = async () => {
+export const getDiciplinaList = async () => {
 
     return await api.get('/api/admin/disciplinas', {
         headers: {
@@ -195,7 +194,7 @@ export const getDiciplinaList: any = async () => {
 
 }
 
-export const atualizarDiciplina: any = async ( id: string, diciplina: Partial<diciplinaData>) => {
+export const atualizarDiciplina = async ( id: string, diciplina: Partial<diciplinaData>) => {
 
     const data: diciplinaData = {};
 
@@ -217,7 +216,7 @@ export const atualizarDiciplina: any = async ( id: string, diciplina: Partial<di
     });
 }
 
-export const apagarDiciplina: any = async ( id: string ) => {
+export const apagarDiciplina = async ( id: string ) => {
 
     return await api.delete('/api/admin/disciplinas/'+id, {
         headers: {
@@ -226,7 +225,7 @@ export const apagarDiciplina: any = async ( id: string ) => {
     });
 }
 
-export const vincularProfessorDiciplina: any = async ( id: string, matricula: string ) => {
+export const vincularProfessorDiciplina = async ( id: string, matricula: string ) => {
 
     const data = {
         disciplinaId: id,
@@ -241,7 +240,7 @@ export const vincularProfessorDiciplina: any = async ( id: string, matricula: st
     });
 }
 
-export const desvincularProfessorDiciplina: any = async ( id: string,) => {
+export const desvincularProfessorDiciplina = async ( id: string,) => {
 
     return await api.delete('/api/admin/disciplinas/'+id+'/desvincular-professor', {
         headers: {
@@ -250,7 +249,7 @@ export const desvincularProfessorDiciplina: any = async ( id: string,) => {
     });
 }
 
-export const vincularAlunoDiciplina: any = async ( 
+export const vincularAlunoDiciplina = async ( 
     id: string,
     matricula: string,
     turno: string,
@@ -274,7 +273,7 @@ export const vincularAlunoDiciplina: any = async (
     });
 }
 
-export const atualizarNotaAluno: any = async ( id: string, matricula: string, nota_1: number, nota_2: number) => {
+export const atualizarNotaAluno = async ( id: string, matricula: string, nota_1: number, nota_2: number) => {
 
     const data = {
         nota_1: nota_1,

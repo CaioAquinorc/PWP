@@ -32,6 +32,12 @@ export type props = {
     onVoltarParaDisciplinas?: any;
     onMostrarModalVincularAluno?: any;
     OnLogOut?: any;
+    cursosAtivos?: any; 
+    mediaGeral?: any; 
+    pendencias?: any;
+    dadosIniciais?: any;  
+    onSalvar?: any; 
+    onEditarPerfil?: any; 
 }
 
 export default props;
