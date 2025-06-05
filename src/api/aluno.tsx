@@ -24,10 +24,11 @@ export const atualizarAluno: any = async ( aluno: Partial<alunoData> ) => {
     data.pessoa = aluno.pessoa;
     }
 
-    return await api.put('/api/aluno/atualizaaluno', {
+    console.log(data);
+
+    return await api.put('/api/aluno/atualizaaluno', data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }

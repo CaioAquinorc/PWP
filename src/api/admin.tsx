@@ -1,5 +1,31 @@
 import api from "./api";
-import { alunoData, professorData, diciplinaData } from "@/types/datatype";
+import { alunoData, professorData, diciplinaData, pessoaData } from "@/types/datatype";
+
+export const getAdmin = async (matricula: string) => {
+
+    return await api.get('/api/admin/admin/'+matricula, {
+        headers: {
+            Authorization:'Bearer '+localStorage.getItem('token')
+        },
+    });
+}
+
+export const getAdminList = async () => {
+
+    return await api.get('/api/admin/admin', {
+        headers: {
+            Authorization:'Bearer '+localStorage.getItem('token')
+        },
+    });
+}
+
+export const atualizarAdmin = async (matricula: string, dados: any) => {
+  return await api.put(`/api/admin/admin/${matricula}`, dados, {
+    headers: {
+      Authorization: 'Bearer ' + localStorage.getItem('token')
+    }
+  });
+};
 
 export const criarUsuario = async ( 
     nome: string, 
@@ -58,11 +84,10 @@ export const atualizarAluno = async ( matricula: string, aluno: Partial<alunoDat
     data.pessoa = aluno.pessoa;
     }
 
-    return await api.put('/api/admin/alunos/'+matricula, {
+    return await api.put('/api/admin/alunos/'+matricula, data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -93,11 +118,10 @@ export const criarProfessor =  async (
         cpf: cpf
     };
 
-    return await api.post('/api/admin/professores', {
+    return await api.post('/api/admin/professores', data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -135,11 +159,10 @@ export const atualizarProfessor = async ( matricula: string, professor: Partial<
     data.pessoa = professor.pessoa;
     }
 
-    return await api.put('/api/admin/professores/'+matricula, {
+    return await api.put('/api/admin/professores/'+matricula, data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -166,11 +189,10 @@ export const criarDisciplina = async (
         professor
     }
 
-    return await api.post('/api/admin/disciplinas', {
+    return await api.post('/api/admin/disciplinas', data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -208,11 +230,10 @@ export const atualizarDiciplina = async ( id: string, diciplina: Partial<dicipli
     data.professor = diciplina.professor;
     }
 
-    return await api.put('/api/admin/disciplinas/'+id, {
+    return await api.put('/api/admin/disciplinas/'+id, data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -232,11 +253,10 @@ export const vincularProfessorDiciplina = async ( id: string, matricula: string 
         professorMatricula: matricula
     }
 
-    return await api.post('/api/admin/disciplinas/vincular-professor', {
+    return await api.post('/api/admin/disciplinas/vincular-professor', data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -265,11 +285,10 @@ export const vincularAlunoDiciplina = async (
         data_termino_semestre: data_termino_semestre
     }
 
-    return await api.post('/api/admin/disciplinas/vincular-aluno', {
+    return await api.post('/api/admin/disciplinas/vincular-aluno', data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }
 
@@ -280,10 +299,9 @@ export const atualizarNotaAluno = async ( id: string, matricula: string, nota_1:
         nota_2: nota_2
     };
 
-    return await api.put('/api/admin/disciplinas/'+id+'/atualizar-nota/'+matricula, {
+    return await api.put('/api/admin/disciplinas/'+id+'/atualizar-nota/'+matricula, data, {
         headers: {
             Authorization:'Bearer '+localStorage.getItem('token')
-        },
-        data
+        }
     });
 }

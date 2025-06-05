@@ -3,13 +3,7 @@ import React, { useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import Header from '@/components/header';
 import { jwtDecode } from "jwt-decode";
-
-interface MyTokenPayload {
-  sub: string;
-  role: string;
-  exp: number;
-  iat: number;
-}
+import { MyTokenPayload } from "@/types/datatype";
 
 export default function Home() {
   const router = useRouter();
@@ -28,8 +22,14 @@ export default function Home() {
         console.log("Admin");
         router.push('/AdminPage');
       }
-      // Você pode adicionar lógica para outros papéis (01, 02) aqui, se necessário
-
+      else if(decode.role.endsWith('02')){
+        console.log("Professor");
+        router.push('/ProfessorPage');
+      }
+      else if(decode.role.endsWith('01')){
+        console.log("Aluno");
+        router.push('/AlunoPage');
+      }
     } else {
       router.push('/loginPage');
     }

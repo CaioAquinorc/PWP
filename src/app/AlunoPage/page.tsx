@@ -7,87 +7,136 @@ import '../../styles/alunoPage.css';
 import ResumoAcademico from "@/components/resumoAcademico";
 import DisciplinasENotas from "@/components/disciplinasNotas";
 import ModalEditarPerfil from "@/components/editarPerfil";
-
+import { getInfoAluno, atualizarAluno } from "@/api/aluno";
+import { alunoData } from "@/types/datatype";
 
 export default function AlunoPage() {
     const router = useRouter();
+    const [dadosAluno, setDadosAluno] = useState<alunoData | null>(null);
+    const [mostrarModalEdicao, setMostrarModalEdicao] = useState(false);
 
     const handleLogout = () => {
-    // 1. Remover o token de autenticação 
-        localStorage.removeItem('token'); // Remove o token do Local Storage
-
-    // 2. Redirecionar o usuário para a página de login
+        localStorage.removeItem('token');
         router.push('/loginPage');
     };
 
-    const [dadosAluno, setDadosAluno] = useState({ // GET dados do aluno e Disciplinas associadas
-        nome: 'Alice',
-        sobrenome: 'Ferreira',
-        data_nascimento: '1995-01-03',
-        email: 'alice.ferreira@gmail.com',
-        telefone: '11999999999',
-        cursos: [
-            { nome: 'Programação Web I', codigo: 'PW101', professor: 'Prof. Ana Silva', nota: '9.5', status: 'Aprovado' },
-            { nome: 'Estrutura de Dados II', codigo: 'ED202', professor: 'Prof. João Souza', nota: '7.0', status: 'Em Andamento' },
-            { nome: 'Banco de Dados Relacionais', codigo: 'BD303', professor: 'Prof. Maria Costa', nota: '8.2', status: 'Aprovado' },
-            { nome: 'Cálculo I', codigo: 'CAL101', professor: 'Prof. Pedro Almeida', nota: '5.5', status: 'Reprovado' },
-        ],
-        resumo: {
-            cursosAtivos: 0,
-            mediaGeral: 'N/A',
-            pendencias: 'Nenhuma'
-        }
-    });
-
-    const [mostrarModalEdicao, setMostrarModalEdicao] = useState(false);
-
     useEffect(() => {
-        // Calcula os dados do resumo
-        const contagemCursosAtivos = dadosAluno.cursos.filter(c => c.status === 'Em Andamento' || c.status === 'Aprovado').length;
-        const totalNotas = dadosAluno.cursos.reduce((soma, c) => soma + (parseFloat(c.nota) || 0), 0);
-        const valorMediaGeral = dadosAluno.cursos.length > 0 ? (totalNotas / dadosAluno.cursos.length).toFixed(1) : 'N/A';
-
-        setDadosAluno(prevDados => ({
-            ...prevDados,
-            resumo: {
-                cursosAtivos: contagemCursosAtivos,
-                mediaGeral: valorMediaGeral,
-                pendencias: "Nenhuma" // Lógica mais complexa para pendências em um sistema real
+        const fetchDadosAluno = async () => {
+            try {
+                const response = await getInfoAluno();
+                console.log(response);
+                const aluno: alunoData = response.data;
+                setDadosAluno(aluno);
+            } catch (error) {
+                console.error("Erro ao buscar dados do aluno:", error);
+                router.push('/loginPage');
             }
-        }));
-    }, [dadosAluno.cursos]); // Recalcula o resumo quando os cursos mudam
+        };
 
-    const handleSalvarDadosAluno = (novosDados) => {
-        setDadosAluno(prevDados => ({
-            ...prevDados,
-            nome: novosDados.nome,
-            sobrenome: novosDados.sobrenome,
-            data_nascimento: novosDados.data_nascmento,
-            email: novosDados.email, 
-            telefone: novosDados.telefone // Embora desabilitado no modal, a lógica de salvamento pode existir
-        }));
-        setMostrarModalEdicao(false); // Fecha o modal após salvar
+        fetchDadosAluno();
+    }, [router]);
+
+    const calcularResumo = () => {
+        if (!dadosAluno?.alunoDiciplina) return { cursosAtivos: 0, mediaGeral: 'N/A', pendencias: 'Nenhuma' };
+
+        const disciplinas = Array.isArray(dadosAluno.alunoDiciplina) ? dadosAluno.alunoDiciplina : [dadosAluno.alunoDiciplina];
+
+        const cursosAtivos = disciplinas.length;
+
+        const notasValidas = disciplinas.map(d => d.media ?? 0);
+        const mediaGeral = notasValidas.length
+            ? (notasValidas.reduce((a, b) => a + b, 0) / notasValidas.length).toFixed(1)
+            : 'N/A';
+
+        return { cursosAtivos, mediaGeral, pendencias: 'Nenhuma' };
     };
 
-    return(
-        <div className="app-container">
-            <Header titulo={'Página do Aluno'} subtitulo={`Bem-vindo(a), ${dadosAluno.nome}.`} OnLogOut={handleLogout} onEditarPerfil={() => setMostrarModalEdicao(true)} />
-            <div className="main-content">
-                <ResumoAcademico cursosAtivos={dadosAluno.resumo.cursosAtivos} mediaGeral={dadosAluno.resumo.mediaGeral} pendencias={dadosAluno.resumo.pendencias} />
-                <DisciplinasENotas cursos={dadosAluno.cursos}/>
-            </div>
-            <ModalEditarPerfil 
-                mostrar={mostrarModalEdicao} 
-                onFechar={() => setMostrarModalEdicao(false)} 
-                dadosIniciais={{
-                    nome: dadosAluno.nome, 
-                    sobrenome: dadosAluno.sobrenome, 
-                    data_nascimento: dadosAluno.data_nascimento, 
-                    email: dadosAluno.email,
-                    telefone: dadosAluno.telefone
+    const montarCursosParaComponente = () => {
+        if (!dadosAluno?.alunoDiciplina) return [];
 
-                }} 
-                onSalvar={handleSalvarDadosAluno} />
+        const disciplinas = Array.isArray(dadosAluno.alunoDiciplina) ? dadosAluno.alunoDiciplina : [dadosAluno.alunoDiciplina];
+
+        return disciplinas.map((disciplina) => ({
+            nome: disciplina.disciplinaId, // Ajuste se você tiver nome da disciplina
+            codigo: disciplina.disciplinaId,
+            professor: "Desconhecido", // Precisa de ajuste se professor vier junto
+            nota: disciplina.media?.toFixed(1) ?? "0.0",
+            status: Number(disciplina.media) >= 6 ? 'Aprovado' : Number(disciplina.media) === 0 ? 'Em Andamento' : 'Reprovado',
+        }));
+    };
+
+    const handleSalvarDadosAluno = async (novosDados: {
+        nome: string;
+        sobrenome: string;
+        data_nascimento: string;
+        email: string;
+        telefone: string;
+    }) => {
+        try {
+            await atualizarAluno({
+                pessoa: {
+                    nome: novosDados.nome,
+                    sobrenome: novosDados.sobrenome,
+                    data_nascimento: novosDados.data_nascimento,
+                    email: novosDados.email,
+                    telefone: novosDados.telefone,
+                }
+            });
+
+            // Atualizar localmente após salvar
+            setDadosAluno((prev) =>
+                prev ? {
+                    ...prev,
+                    pessoa: {
+                        ...prev.pessoa,
+                        nome: novosDados.nome,
+                        sobrenome: novosDados.sobrenome,
+                        dataNascimento: novosDados.data_nascimento,
+                        email: novosDados.email,
+                        telefone: novosDados.telefone,
+                    }
+                } : prev
+            );
+        } catch (error) {
+            console.error("Erro ao atualizar dados do aluno:", error);
+        }
+
+        setMostrarModalEdicao(false);
+    };
+
+    if (!dadosAluno || !dadosAluno.pessoa) return <div>Carregando dados do aluno...</div>;
+
+    const resumo = calcularResumo();
+    const cursos = montarCursosParaComponente();
+
+    return (
+        <div className="app-container">
+            <Header
+                titulo="Página do Aluno"
+                subtitulo={`Bem-vindo(a), ${dadosAluno.pessoa.nome}`}
+                OnLogOut={handleLogout}
+                onEditarPerfil={() => setMostrarModalEdicao(true)}
+            />
+            <div className="main-content">
+                <ResumoAcademico
+                    cursosAtivos={resumo.cursosAtivos}
+                    mediaGeral={resumo.mediaGeral}
+                    pendencias={resumo.pendencias}
+                />
+                <DisciplinasENotas cursos={cursos} />
+            </div>
+            <ModalEditarPerfil
+                mostrar={mostrarModalEdicao}
+                onFechar={() => setMostrarModalEdicao(false)}
+                dadosIniciais={{
+                    nome: dadosAluno.pessoa.nome || '',
+                    sobrenome: dadosAluno.pessoa.sobrenome || '',
+                    data_nascimento: dadosAluno.pessoa.data_nascimento || '',
+                    email: dadosAluno.pessoa.email || '',
+                    telefone: dadosAluno.pessoa.telefone || ''
+                }}
+                onSalvar={handleSalvarDadosAluno}
+            />
         </div>
     );
 }

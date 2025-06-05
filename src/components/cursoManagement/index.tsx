@@ -34,7 +34,7 @@ export default function DisciplinaManagement() {
       return;
     }
 
-    const professor = professores.find(p => p.matricula === professorSelecionado);
+    const professor = professores.find(p => p.pessoa?.matricula === professorSelecionado);
     if (!professor) {
       setMensagem('Professor selecionado inválido.');
       setTipoMensagem('erro');
@@ -103,7 +103,7 @@ export default function DisciplinaManagement() {
             >
               <option value="">Selecione um professor</option>
               {professores.map((prof) => (
-                <option key={prof.matricula} value={prof.matricula}>
+                <option key={prof.pessoa?.matricula} value={prof.pessoa?.matricula}>
                   {prof.pessoa?.nome} {prof.pessoa?.sobrenome}
                 </option>
               ))}
