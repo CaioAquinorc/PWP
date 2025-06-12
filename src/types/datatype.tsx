@@ -9,15 +9,15 @@ export type pessoaData = {
 }
 
 export type alunoData = {
-    matricula?: string,
     periodo?: string,
     pessoa?: pessoaData,
-    alunoDiciplina?: AlunoDisciplinaData;
+    matriculasDisciplinas?: alunoDisciplinaData[];
 }
 
 export type professorData = {
     pessoa?: pessoaData,
     data_contrato?: string
+    disciplinas?: diciplinaData[];
 }
 
 export type diciplinaData = {
@@ -34,7 +34,7 @@ export interface MyTokenPayload {
   iat: number;
 }
 
-export type AlunoDisciplinaData = {
+export type alunoDisciplinaData = {
   alunoMatricula: string;
   disciplinaId: string;
   nota_1: number | null;
@@ -43,4 +43,14 @@ export type AlunoDisciplinaData = {
   turno: string;
   data_inicio_semestre: string;
   data_termino_semestre: string;
+}
+
+export type alunosNaDisciplinaData = {
+  matricula: string;
+  nome: string;
+  sobrenome: string;
+  email: string;
+  nota_1: number | null;
+  nota_2: number | null;
+  media: number | null;
 }

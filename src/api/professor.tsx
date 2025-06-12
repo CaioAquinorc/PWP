@@ -32,4 +32,32 @@ export const atualizarProfessor: any = async ( professor: Partial<professorData>
             Authorization:'Bearer '+localStorage.getItem('token')
         }
     });
+    
+}
+
+export const getAlunosDiciplinas: any = async () => {
+
+    return await api.get('/api/professor/alunos-disciplinas', {
+        headers: {
+            Authorization:'Bearer '+localStorage.getItem('token')
+        },
+    });
+
+}
+
+export const getAtribuirNotas: any = async ( alunoId: string, disciplinaId: string, nota1: string, nota2: string) => {
+
+    const data = {
+        alunoMatricula: alunoId, 
+        disciplinaId: disciplinaId, 
+        nota_1: nota1, 
+        nota_2: nota2
+    }
+
+    return await api.post('/api/professor/atribuir-notas', data, {
+        headers: {
+            Authorization:'Bearer '+localStorage.getItem('token')
+        },
+    });
+
 }

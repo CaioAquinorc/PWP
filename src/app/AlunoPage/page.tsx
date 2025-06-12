@@ -8,7 +8,8 @@ import ResumoAcademico from "@/components/resumoAcademico";
 import DisciplinasENotas from "@/components/disciplinasNotas";
 import ModalEditarPerfil from "@/components/editarPerfil";
 import { getInfoAluno, atualizarAluno } from "@/api/aluno";
-import { alunoData } from "@/types/datatype";
+import { alunoData, alunoDisciplinaData, diciplinaData } from "@/types/datatype";
+import { getDiciplinaList } from "@/api/admin"; // Importa a lista de disciplinas
 
 export default function AlunoPage() {
     const router = useRouter();
@@ -21,48 +22,52 @@ export default function AlunoPage() {
     };
 
     useEffect(() => {
-        const fetchDadosAluno = async () => {
+        const fetchData = async () => {
             try {
+                // Busca os dados do aluno
                 const response = await getInfoAluno();
-                console.log(response);
                 const aluno: alunoData = response.data;
+                console.log(aluno);
                 setDadosAluno(aluno);
+
             } catch (error) {
-                console.error("Erro ao buscar dados do aluno:", error);
+                console.error("Erro ao buscar dados:", error);
+                localStorage.removeItem('token');
                 router.push('/loginPage');
             }
         };
 
-        fetchDadosAluno();
+        fetchData();
     }, [router]);
 
     const calcularResumo = () => {
-        if (!dadosAluno?.alunoDiciplina) return { cursosAtivos: 0, mediaGeral: 'N/A', pendencias: 'Nenhuma' };
+        if (!dadosAluno?.matriculasDisciplinas) return { cursosAtivos: 0, mediaGeral: 'N/A', pendencias: 'Nenhuma' };
 
-        const disciplinas = Array.isArray(dadosAluno.alunoDiciplina) ? dadosAluno.alunoDiciplina : [dadosAluno.alunoDiciplina];
+        const disciplinasAluno = dadosAluno.matriculasDisciplinas;
 
-        const cursosAtivos = disciplinas.length;
+        const cursosAtivos = disciplinasAluno.length;
 
-        const notasValidas = disciplinas.map(d => d.media ?? 0);
-        const mediaGeral = notasValidas.length
-            ? (notasValidas.reduce((a, b) => a + b, 0) / notasValidas.length).toFixed(1)
+        const medias = disciplinasAluno.map(d => d.media ?? 0);
+        const mediaGeral = medias.length
+            ? (medias.reduce((a, b) => a + b, 0) / medias.length).toFixed(1)
             : 'N/A';
 
         return { cursosAtivos, mediaGeral, pendencias: 'Nenhuma' };
     };
 
     const montarCursosParaComponente = () => {
-        if (!dadosAluno?.alunoDiciplina) return [];
+        if (!dadosAluno?.matriculasDisciplinas) return [];
 
-        const disciplinas = Array.isArray(dadosAluno.alunoDiciplina) ? dadosAluno.alunoDiciplina : [dadosAluno.alunoDiciplina];
+        return dadosAluno.matriculasDisciplinas.map((disciplinaAluno) => {
+            // Busca a disciplina pelo ID
 
-        return disciplinas.map((disciplina) => ({
-            nome: disciplina.disciplinaId, // Ajuste se você tiver nome da disciplina
-            codigo: disciplina.disciplinaId,
-            professor: "Desconhecido", // Precisa de ajuste se professor vier junto
-            nota: disciplina.media?.toFixed(1) ?? "0.0",
-            status: Number(disciplina.media) >= 6 ? 'Aprovado' : Number(disciplina.media) === 0 ? 'Em Andamento' : 'Reprovado',
-        }));
+            return {
+                nome: disciplinaAluno.disciplinaId ? disciplinaAluno.disciplinaId : `ID: ${disciplinaAluno.disciplinaId}`,
+                codigo: disciplinaAluno.disciplinaId,
+                nota: disciplinaAluno.media ?? "0.0",
+                status: disciplinaAluno.media != null ? (disciplinaAluno.media >= 6 ? 'Aprovado' : 'Reprovado') : 'Em Andamento',
+            };
+        });
     };
 
     const handleSalvarDadosAluno = async (novosDados: {
@@ -83,7 +88,6 @@ export default function AlunoPage() {
                 }
             });
 
-            // Atualizar localmente após salvar
             setDadosAluno((prev) =>
                 prev ? {
                     ...prev,

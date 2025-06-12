@@ -10,7 +10,6 @@ export default function DisciplinasENotas({ cursos } : props) {
                         <tr>
                             <th>Disciplina</th>
                             <th>Código</th>
-                            <th>Professor</th>
                             <th>Nota</th>
                             <th>Status</th>
                         </tr>
@@ -29,7 +28,6 @@ export default function DisciplinasENotas({ cursos } : props) {
                                 <tr key={index}>
                                     <td>{curso.nome}</td>
                                     <td>{curso.codigo}</td>
-                                    <td>{curso.professor}</td>
                                     <td>{curso.nota}</td>
                                     <td className={`font-semibold ${classeCorStatus}`}>{curso.status}</td>
                                 </tr>

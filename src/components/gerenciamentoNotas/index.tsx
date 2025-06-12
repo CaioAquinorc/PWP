@@ -1,55 +1,64 @@
-import props from "@/types/props";
 import { useEffect, useState } from "react";
-import './gerenciamentoNotas.css'
+import { diciplinaData, alunosNaDisciplinaData } from "@/types/datatype";
+import './gerenciamentoNotas.css';
+
+interface GerenciamentoNotasProps {
+    disciplinaSelecionada: diciplinaData;
+    alunosNaDisciplina: alunosNaDisciplinaData[];
+    onAtualizarNotas: (
+        disciplinaId: string,
+        alunoId: string,
+        campoNota: 'nota_1' | 'nota_2',
+        novaNota: number
+    ) => void;
+    onVoltarParaDisciplinas: () => void;
+}
 
 export default function GerenciamentoNotas({
     disciplinaSelecionada,
     alunosNaDisciplina,
     onAtualizarNotas,
-    onAdicionarAlunoNaDisciplina,
-    onVoltarParaDisciplinas,
-    onMostrarModalVincularAluno,
-    todosAlunos
-} : props) {
-    const [notasAlunosLocais, setNotasAlunosLocais] = useState([]);
+    onVoltarParaDisciplinas
+}: GerenciamentoNotasProps) {
+    const [notasAlunosLocais, setNotasAlunosLocais] = useState<alunosNaDisciplinaData[]>([]);
 
     useEffect(() => {
+        // Inicializa o estado local com os dados recebidos
         setNotasAlunosLocais(alunosNaDisciplina.map(aluno => ({ ...aluno })));
     }, [alunosNaDisciplina]);
 
-    const handleMudancaNotaLocal = (idAluno, campoNota, valor) => {
+    const handleMudancaNotaLocal = (matricula: string, campoNota: 'nota_1' | 'nota_2', valor: string) => {
+        const valorNumerico = parseFloat(valor);
         setNotasAlunosLocais(prevNotas =>
             prevNotas.map(aluno =>
-                aluno.id === idAluno ? { ...aluno, [campoNota]: parseFloat(valor) || 0 } : aluno
+                aluno.matricula === matricula
+                    ? { ...aluno, [campoNota]: isNaN(valorNumerico) ? 0 : valorNumerico }
+                    : aluno
             )
         );
     };
 
-    const handleSalvarNotas = (idAluno) => {
-        const alunoParaSalvar = notasAlunosLocais.find(a => a.id === idAluno);
+    const handleSalvarNotas = (matricula: string) => {
+        const alunoParaSalvar = notasAlunosLocais.find(a => a.matricula === matricula);
         if (alunoParaSalvar) {
-            onAtualizarNotas(disciplinaSelecionada.id, idAluno, 'grade1', alunoParaSalvar.grade1);
-            onAtualizarNotas(disciplinaSelecionada.id, idAluno, 'grade2', alunoParaSalvar.grade2);
-            // console.log(`Notas de ${alunoParaSalvar.id} salvas!`);
+            onAtualizarNotas(disciplinaSelecionada.id!, matricula, 'nota_1', alunoParaSalvar.nota_1 ?? 0);
+            onAtualizarNotas(disciplinaSelecionada.id!, matricula, 'nota_2', alunoParaSalvar.nota_2 ?? 0);
         }
     };
 
     return (
         <section className="card section-col">
-            <h2 className="section-title">Gerenciar Notas: {disciplinaSelecionada.nome}</h2>
-
-            <div className="form-container mb-8">
-                <button className="btn-primary w-full" onClick={onMostrarModalVincularAluno}>
-                    Vincular Aluno Existente
-                </button>
-            </div>
+            <h2 className="section-title">
+                Gerenciar Notas: {disciplinaSelecionada.nome}
+            </h2>
 
             <div className="mb-8">
-                <h3 className="form-subtitle">Notas dos Alunos em {disciplinaSelecionada.id}</h3>
+                <h3 className="form-subtitle">Notas dos Alunos</h3>
                 <div className="overflow-x-auto">
                     <table className="data-table">
                         <thead className="table-header">
                             <tr>
+                                <th scope="col" className="rounded-tl-lg-th">Nome</th>
                                 <th scope="col" className="rounded-tl-lg-th">Matrícula</th>
                                 <th scope="col">Nota 1</th>
                                 <th scope="col">Nota 2</th>
@@ -60,41 +69,46 @@ export default function GerenciamentoNotas({
                         <tbody className="table-body">
                             {notasAlunosLocais.length === 0 ? (
                                 <tr>
-                                    <td colSpan="5" className="text-center py-4 text-gray-500">Nenhum aluno matriculado nesta disciplina.</td>
+                                    <td colSpan={5} className="text-center py-4 text-gray-500">
+                                        Nenhum aluno matriculado nesta disciplina.
+                                    </td>
                                 </tr>
                             ) : (
                                 notasAlunosLocais.map((aluno) => (
-                                    <tr key={aluno.id}>
-                                        <td>{aluno.id}</td>
+                                    <tr key={aluno.matricula}>
+                                        <td>{aluno.nome}</td>
+                                        <td>{aluno.matricula}</td>
                                         <td>
                                             <input
                                                 type="number"
-                                                value={aluno.grade1}
+                                                value={aluno.nota_1 ?? ''}
                                                 step="0.1"
                                                 min="0"
                                                 max="10"
                                                 className="input-field-small"
-                                                onChange={(e) => handleMudancaNotaLocal(aluno.id, 'grade1', e.target.value)}
+                                                onChange={(e) =>
+                                                    handleMudancaNotaLocal(aluno.matricula, 'nota_1', e.target.value)
+                                                }
                                             />
                                         </td>
                                         <td>
                                             <input
                                                 type="number"
-                                                value={aluno.grade2}
+                                                value={aluno.nota_2 ?? ''}
                                                 step="0.1"
                                                 min="0"
                                                 max="10"
                                                 className="input-field-small"
-                                                onChange={(e) => handleMudancaNotaLocal(aluno.id, 'grade2', e.target.value)}
+                                                onChange={(e) =>
+                                                    handleMudancaNotaLocal(aluno.matricula, 'nota_2', e.target.value)
+                                                }
                                             />
                                         </td>
-                                        <td>
-                                            {((aluno.grade1 + aluno.grade2) / 2).toFixed(1)}
-                                        </td>
+                                        <td>{(((aluno.nota_1 ?? 0) + (aluno.nota_2 ?? 0)) / 2).toFixed(1)}</td>
                                         <td>
                                             <button
                                                 className="btn-primary btn-salvar-nota"
-                                                onClick={() => handleSalvarNotas(aluno.id)}
+                                                onClick={() => handleSalvarNotas(aluno.matricula)}
                                             >
                                                 Salvar
                                             </button>

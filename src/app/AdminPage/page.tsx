@@ -9,7 +9,8 @@ import '../../styles/adminPage.css';
 import ModalEditarPerfil from '@/components/editarPerfil';
 import { jwtDecode } from "jwt-decode";
 import { MyTokenPayload } from "@/types/datatype";
-import { getAdmin, atualizarAdmin } from '@/api/admin'; // Importar a nova função
+import { getAdmin, atualizarAdmin } from '@/api/admin';
+import VincularAlunoForm from '@/components/vincularAlunoForm';
 
 export default function AdminPage() {
   const router = useRouter();
@@ -90,6 +91,7 @@ export default function AdminPage() {
         <AlunoManagement />
         <ProfessorManagement />
         <CursoManagement />
+        <VincularAlunoForm />
       </div>
       <ModalEditarPerfil 
         mostrar={mostrarModalEdicao} 

@@ -2,172 +2,166 @@
 import Header from "@/components/header";
 import ListaDisciplinas from "@/components/listaDisciplina";
 import GerenciamentoNotas from "@/components/gerenciamentoNotas";
-import { useEffect, useState } from "react";
-import '../../styles/professorPage.css';
-import VincularAluno from "@/components/vincularAluno";
-import { useRouter } from 'next/navigation';
 import ModalEditarPerfil from "@/components/editarPerfil";
+import '../../styles/professorPage.css';
 
-
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+import { getInfoProfessor, atualizarProfessor, getAlunosDiciplinas, getAtribuirNotas } from "@/api/professor";
+import { professorData, diciplinaData, alunosNaDisciplinaData } from "@/types/datatype";
+import { DisciplinaComTotal } from "@/components/listaDisciplina";
 
 export default function ProfessorPage() {
     const router = useRouter();
 
-    const handleLogout = () => {
-    // 1. Remover o token de autenticação 
-        localStorage.removeItem('token'); // Remove o token do Local Storage
+    const [dadosProfessor, setDadosProfessor] = useState<professorData | null>(null);
+    const [disciplinas, setDisciplinas] = useState<diciplinaData[]>([]);
+    const [alunosPorDisciplina, setAlunosPorDisciplina] = useState<Record<string, alunosNaDisciplinaData[]>>({});
+    const [idDisciplinaSelecionada, setIdDisciplinaSelecionada] = useState<string | null>(null);
+    const [mostrarModalEdicao, setMostrarModalEdicao] = useState(false);
 
-    // 2. Redirecionar o usuário para a página de login
+    const disciplinasComTotalAlunos: DisciplinaComTotal[] = disciplinas.map((disciplina) => ({
+    ...disciplina,
+    totalAlunos: alunosPorDisciplina[disciplina.id ?? '']?.length ?? 0
+    }));
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
         router.push('/loginPage');
     };
 
-    const [dadosProfessor, setDadosProfessor] = useState({ // GET dados do Professor
-    nome: 'João',
-    sobrenome: 'Souza',
-    data_nascimento: '2000-03-22',
-    email: 'souza.joao@gmail.com',
-    telefone: '11999999999',
-    });
-    
-    const [disciplinas, setDisciplinas] = useState([ //GET DISCIPLINAS
-        { nome: 'Programação Web I', id: 'PW101', totalAlunos: 0 },
-        { nome: 'Estrutura de Dados II', id: 'ED202', totalAlunos: 0 },
-        { nome: 'Banco de Dados Relacionais', id: 'BD303', totalAlunos: 0 },
-    ]);
-
-    const [alunosPorDisciplina, setAlunosPorDisciplina] = useState({ //GET ALUNOS MATRICULADOS
-        'PW101': [
-            { id: 'S001', grade1: 8.5, grade2: 7.0 },
-            { id: 'S002', grade1: 6.0, grade2: 9.0 },
-        ],
-        'ED202': [
-            { id: 'S003', grade1: 7.2, grade2: 8.8 },
-        ],
-        'BD303': [],
-    });
-
-    const [todosAlunos, setTodosAlunos] = useState([ // GET ALUNOS
-        { name: 'Maria Oliveira', id: 'S001' },
-        { name: 'Carlos Santos', id: 'S002' },
-        { name: 'Ana Paula', id: 'S003' },
-        { name: 'Pedro Costa', id: 'S004' },
-        { name: 'Juliana Lima', id: 'S005' },
-        { name: 'Fernando Alves', id: 'S006' },
-        { name: 'Gabriela Rocha', id: 'S007' },
-    ]);
-
-    const [idDisciplinaSelecionada, setIdDisciplinaSelecionada] = useState(null);
-    const [mostrarModalVincularAluno, setMostrarModalVincularAluno] = useState(false);
-
     useEffect(() => {
-        setDisciplinas(prevDisciplinas =>
-            prevDisciplinas.map(disciplina => ({
-                ...disciplina,
-                totalAlunos: alunosPorDisciplina[disciplina.id]?.length || 0
-            }))
-        );
-    }, [alunosPorDisciplina]);
+        const carregarDados = async () => {
+            try {
+                const response = await getInfoProfessor();
+                const professor: professorData = response.data;
+                setDadosProfessor(professor);
+                setDisciplinas(professor.disciplinas ?? []);
 
-    const handleSelecionarDisciplina = (id) => {
-        setIdDisciplinaSelecionada(id);
-    };
+                const alunosResponse = await getAlunosDiciplinas();
+                const alunosData: { disciplina: diciplinaData; alunos: alunosNaDisciplinaData[] }[] = alunosResponse.data;
 
-    const handleVoltarParaDisciplinas = () => {
-        setIdDisciplinaSelecionada(null);
-    };
+                const mapAlunosPorDisciplina: Record<string, alunosNaDisciplinaData[]> = {};
+                alunosData.forEach((item) => {
+                    if (item.disciplina.id) {
+                        mapAlunosPorDisciplina[item.disciplina.id] = item.alunos;
+                    }
+                });
 
-    const handleAdicionarAlunoNaDisciplina = (idCurso, nomeAluno, idAluno) => {
-        setAlunosPorDisciplina(prevState => {
-            const alunosAtuais = prevState[idCurso] || [];
-            if (alunosAtuais.some(aluno => aluno.id === idAluno)) {
-                console.warn(`O aluno ${nomeAluno} (Matrícula: ${idAluno}) já está matriculado nesta disciplina.`);
-                return prevState;
+                setAlunosPorDisciplina(mapAlunosPorDisciplina);
+            } catch (error) {
+                console.error("Erro ao carregar dados:", error);
+                localStorage.removeItem('token');
+                router.push('/loginPage');
             }
-            const novoAluno = { id: idAluno, grade1: 0.0, grade2: 0.0 };
-            return {
-                ...prevState,
-                [idCurso]: [...alunosAtuais, novoAluno]
-            };
+        };
+
+        carregarDados();
+    }, []);
+
+    const handleAtualizarNotas = async (
+        disciplinaId: string,
+        alunoId: string,
+        campoNota: 'nota_1' | 'nota_2',
+        novaNota: number
+    ) => {
+        setAlunosPorDisciplina(prev => {
+            const atualizados = prev[disciplinaId]?.map(aluno => {
+                if (aluno.matricula === alunoId) {
+                    return { ...aluno, [campoNota]: novaNota };
+                }
+                return aluno;
+            }) || [];
+
+            return { ...prev, [disciplinaId]: atualizados };
         });
+
+        const aluno = alunosPorDisciplina[disciplinaId]?.find(a => a.matricula === alunoId);
+        if (aluno) {
+            try {
+                await getAtribuirNotas(
+                    alunoId,
+                    disciplinaId,
+                    (campoNota === "nota_1" ? novaNota : aluno.nota_1 ?? 0).toString(),
+                    (campoNota === "nota_2" ? novaNota : aluno.nota_2 ?? 0).toString()
+                );
+            } catch (error) {
+                console.error("Erro ao salvar notas:", error);
+            }
+        }
     };
 
-    const handleAtualizarNotas = (idCurso, idAluno, campoNota, novaNota) => {
-        setAlunosPorDisciplina(prevState => {
-            const alunosAtualizados = prevState[idCurso].map(aluno =>
-                aluno.id === idAluno ? { ...aluno, [campoNota]: novaNota } : aluno
-            );
-            return {
-                ...prevState,
-                [idCurso]: alunosAtualizados
-            };
-        });
+    const handleSalvarDados = async (novosDados: {
+        nome: string;
+        sobrenome: string;
+        data_nascimento: string;
+        email: string;
+        telefone: string;
+    }) => {
+        if (!dadosProfessor) return;
+
+        const novosDadosProfessor: professorData = {
+            pessoa: {
+                ...dadosProfessor.pessoa,
+                nome: novosDados.nome,
+                sobrenome: novosDados.sobrenome,
+                data_nascimento: novosDados.data_nascimento,
+                email: novosDados.email,
+                telefone: novosDados.telefone
+            },
+            data_contrato: dadosProfessor.data_contrato,
+            disciplinas: dadosProfessor.disciplinas
+        };
+
+        try {
+            await atualizarProfessor(novosDadosProfessor);
+            setDadosProfessor(novosDadosProfessor);
+            setMostrarModalEdicao(false);
+        } catch (error) {
+            console.error("Erro ao atualizar dados do professor:", error);
+        }
     };
 
-    const disciplinaAtualSelecionada = idDisciplinaSelecionada
-        ? disciplinas.find(d => d.id === idDisciplinaSelecionada)
-        : null;
-
-    const alunosParaDisciplinaSelecionada = idDisciplinaSelecionada
-        ? alunosPorDisciplina[idDisciplinaSelecionada] || []
-        : [];
-
-
-    const [mostrarModalEdicao, setMostrarModalEdicao] = useState(false);
-
-    const handleSalvarDados = (novosDados) => {
-        setDadosProfessor(prevDados => ({
-            ...prevDados,
-            nome: novosDados.nome,
-            sobrenome: novosDados.sobrenome,
-            data_nascimento: novosDados.data_nascmento,
-            email: novosDados.email, 
-            telefone: novosDados.telefone // Embora desabilitado no modal, a lógica de salvamento pode existir
-        }));
-        setMostrarModalEdicao(false); // Fecha o modal após salvar
-    };
+    const disciplinaAtual = disciplinas.find(d => d.id === idDisciplinaSelecionada);
+    const alunosNaDisciplina = idDisciplinaSelecionada ? alunosPorDisciplina[idDisciplinaSelecionada] ?? [] : [];
 
     return (
         <div className="app-container">
-            <Header titulo={'Página do Professor'} subtitulo={`Bem-vindo(a), Professor(a) ${dadosProfessor.nome + ' ' + dadosProfessor.sobrenome}.`} OnLogOut={handleLogout} onEditarPerfil={() => setMostrarModalEdicao(true)}/>
+            <Header
+                titulo="Página do Professor"
+                subtitulo={`Bem-vindo(a), ${dadosProfessor?.pessoa?.nome ?? ''} ${dadosProfessor?.pessoa?.sobrenome ?? ''}`}
+                OnLogOut={handleLogout}
+                onEditarPerfil={() => setMostrarModalEdicao(true)}
+            />
+
             <div className="main-content">
                 {idDisciplinaSelecionada ? (
                     <GerenciamentoNotas
-                        disciplinaSelecionada={disciplinaAtualSelecionada}
-                        alunosNaDisciplina={alunosParaDisciplinaSelecionada}
+                        disciplinaSelecionada={disciplinaAtual!}
+                        alunosNaDisciplina={alunosNaDisciplina}
                         onAtualizarNotas={handleAtualizarNotas}
-                        onAdicionarAlunoNaDisciplina={handleAdicionarAlunoNaDisciplina}
-                        onVoltarParaDisciplinas={handleVoltarParaDisciplinas}
-                        onMostrarModalVincularAluno={() => setMostrarModalVincularAluno(true)}
-                        todosAlunos={todosAlunos}
+                        onVoltarParaDisciplinas={() => setIdDisciplinaSelecionada(null)}
                     />
                 ) : (
                     <ListaDisciplinas
-                        disciplinas={disciplinas}
-                        onSelecionarDisciplina={handleSelecionarDisciplina}
+                        disciplinas={disciplinasComTotalAlunos}
+                        onSelecionarDisciplina={setIdDisciplinaSelecionada}
                     />
                 )}
             </div>
-            <VincularAluno
-                mostrar={mostrarModalVincularAluno}
-                onFechar={() => setMostrarModalVincularAluno(false)}
-                todosAlunos={todosAlunos}
-                alunosNaDisciplinaAtual={alunosParaDisciplinaSelecionada}
-                onVincularAluno={handleAdicionarAlunoNaDisciplina}
-                idDisciplinaSelecionada={idDisciplinaSelecionada}
-            />
-            <ModalEditarPerfil 
-                mostrar={mostrarModalEdicao} 
-                onFechar={() => setMostrarModalEdicao(false)} 
+
+            <ModalEditarPerfil
+                mostrar={mostrarModalEdicao}
+                onFechar={() => setMostrarModalEdicao(false)}
                 dadosIniciais={{
-                    nome: dadosProfessor.nome, 
-                    sobrenome: dadosProfessor.sobrenome, 
-                    data_nascimento: dadosProfessor.data_nascimento, 
-                    email: dadosProfessor.email,
-                    telefone: dadosProfessor.telefone
-    
-                }} 
-                onSalvar={handleSalvarDados} 
-            />
+                    nome: dadosProfessor?.pessoa?.nome ?? '',
+                    sobrenome: dadosProfessor?.pessoa?.sobrenome ?? '',
+                    data_nascimento: dadosProfessor?.pessoa?.data_nascimento ?? '',
+                    email: dadosProfessor?.pessoa?.email ?? '',
+                    telefone: dadosProfessor?.pessoa?.telefone ?? ''
+                }}
+                onSalvar={handleSalvarDados}
+            />  
         </div>
-    )
+    );
 }
