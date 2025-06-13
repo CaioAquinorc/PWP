@@ -23,8 +23,13 @@ export default function GerenciamentoNotas({
     const [notasAlunosLocais, setNotasAlunosLocais] = useState<alunosNaDisciplinaData[]>([]);
 
     useEffect(() => {
-        // Inicializa o estado local com os dados recebidos
-        setNotasAlunosLocais(alunosNaDisciplina.map(aluno => ({ ...aluno })));
+        setNotasAlunosLocais(
+            alunosNaDisciplina.map(aluno => ({
+                ...aluno,
+                nota_1: aluno.nota_1 != null ? Number(aluno.nota_1) : null,
+                nota_2: aluno.nota_2 != null ? Number(aluno.nota_2) : null
+            }))
+        );
     }, [alunosNaDisciplina]);
 
     const handleMudancaNotaLocal = (matricula: string, campoNota: 'nota_1' | 'nota_2', valor: string) => {
@@ -80,31 +85,29 @@ export default function GerenciamentoNotas({
                                         <td>{aluno.matricula}</td>
                                         <td>
                                             <input
-                                                type="number"
-                                                value={aluno.nota_1 ?? ''}
-                                                step="0.1"
-                                                min="0"
-                                                max="10"
-                                                className="input-field-small"
+                                                type="text"
+                                                value={aluno.nota_1 != null ? aluno.nota_1.toFixed(1) : ''}
                                                 onChange={(e) =>
                                                     handleMudancaNotaLocal(aluno.matricula, 'nota_1', e.target.value)
                                                 }
+                                                className="input-field-small"
+                                                inputMode="decimal"
+                                                pattern="[0-9]+([.][0-9]{1,2})?"
                                             />
                                         </td>
                                         <td>
                                             <input
-                                                type="number"
-                                                value={aluno.nota_2 ?? ''}
-                                                step="0.1"
-                                                min="0"
-                                                max="10"
-                                                className="input-field-small"
+                                                type="text"
+                                                value={aluno.nota_2 != null ? aluno.nota_2.toFixed(1) : ''}
                                                 onChange={(e) =>
                                                     handleMudancaNotaLocal(aluno.matricula, 'nota_2', e.target.value)
                                                 }
+                                                className="input-field-small"
+                                                inputMode="decimal"
+                                                pattern="[0-9]+([.][0-9]{1,2})?"
                                             />
                                         </td>
-                                        <td>{(((aluno.nota_1 ?? 0) + (aluno.nota_2 ?? 0)) / 2).toFixed(1)}</td>
+                                        <td>{(((aluno.nota_1 ?? 0) + (aluno.nota_2 ?? 0)) / 2)}</td>
                                         <td>
                                             <button
                                                 className="btn-primary btn-salvar-nota"

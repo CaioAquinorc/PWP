@@ -41,25 +41,6 @@ export default function AlunoManagement() {
       setMensagem('Erro ao matricular aluno. Verifique os dados ou tente novamente.');
       setTipoMensagem('erro');
     });
-
-    /*try {
-      await criarUsuario(nome, sobrenome, dataNascimento, email, telefone, cpf);
-      setMensagem('Aluno matriculado com sucesso!');
-      setTipoMensagem('sucesso');
-
-      // Limpar os campos
-      setCpf('');
-      setEmail('');
-      setNome('');
-      setSobrenome('');
-      setDataNascimento('');
-      setTelefone('');
-    } catch (error) {
-      console.error("Erro ao criar aluno:", error);
-      setMensagem('Erro ao matricular aluno. Verifique os dados ou tente novamente.');
-      setTipoMensagem('erro');
-    }
-    */
   };
 
   return (
